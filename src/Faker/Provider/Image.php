@@ -60,8 +60,9 @@ class Image extends Base
      * Requires curl, or allow_url_fopen to be on in php.ini.
      *
      * @example '/path/to/dir/13b73edae8443990be1aa8f1a483bc27.jpg'
+     * @params $name custom name
      */
-    public static function image($dir = null, $width = 640, $height = 480, $category = null, $fullPath = true, $randomize = true, $word = null)
+    public static function image($dir = null, $width = 640, $height = 480, $category = null, $fullPath = true, $randomize = true, $word = null, $name = null)
     {
         $dir = is_null($dir) ? sys_get_temp_dir() : $dir; // GNU/Linux / OS X / Windows compatible
         // Validate directory path
@@ -69,9 +70,12 @@ class Image extends Base
             throw new \InvalidArgumentException(sprintf('Cannot write to directory "%s"', $dir));
         }
 
-        // Generate a random filename. Use the server address so that a file
-        // generated at the same time on a different server won't have a collision.
-        $name = md5(uniqid(empty($_SERVER['SERVER_ADDR']) ? '' : $_SERVER['SERVER_ADDR'], true));
+        //Custom name
+        if(is_null($name)){
+            // Generate a random filename. Use the server address so that a file
+            // generated at the same time on a different server won't have a collision.
+            $name = md5(uniqid(empty($_SERVER['SERVER_ADDR']) ? '' : $_SERVER['SERVER_ADDR'], true));
+        }
         $filename = $name .'.jpg';
         $filepath = $dir . DIRECTORY_SEPARATOR . $filename;
 
